@@ -6,3 +6,4 @@
 .DS_Store
 /plugin.dylib
 /plugin.dll
+/dep/
