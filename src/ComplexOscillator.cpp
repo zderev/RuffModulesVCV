@@ -5,18 +5,18 @@ struct ComplexOscillator : Module {
     enum ParamId {
         FREQ1_PARAM,
         FREQ2_PARAM,
-        CV1_ATTV_PARAM,
-        CV2_ATTV_PARAM,
+        CV1_ATTNV_PARAM,
+        CV2_ATTNV_PARAM,
         FM1_PARAM,
         FM2_PARAM,
         MOD_INDEX_PARAM,
-        MOD_CV_PARAM,
+        MOD_CV_ATTNV_PARAM,
         HARMONICS_TIMBRE_PARAM,
-        HARMONICS_TIMBRE_CV_PARAM,
+        HARMONICS_TIMBRE_CV_ATTNV_PARAM,
         HARMONICS_LOW_HIGH_PARAM,
-        HARMONICS_LOW_HIGH_CV_PARAM,
+        HARMONICS_LOW_HIGH_CV_ATTNV_PARAM,
         HARMONICS_EVEN_ODD_PARAM,
-        HARMONICS_EVEN_ODD_CV_PARAM,
+        HARMONICS_EVEN_ODD_CV_ATTNV_PARAM,
         PARAMS_LEN
     };
     enum InputId {
@@ -67,8 +67,8 @@ struct ComplexOscillator : Module {
         // -- Params OSC
         configParam(FREQ1_PARAM, 0.f, 10.f, 5.f, "OSC1 Freq", "%", 0, 10);
         configParam(FREQ2_PARAM, 0.f, 10.f, 5.f, "OSC2 Freq", "%", 0, 10);
-        configParam(CV1_ATTV_PARAM, -1.f, 1.f, 0.f, "OSC1 CV", "%", 0, 100);
-        configParam(CV2_ATTV_PARAM, -1.f, 1.f, 0.f, "OSC2 CV", "%", 0, 100);
+        configParam(CV1_ATTNV_PARAM, -1.f, 1.f, 0.f, "OSC1 CV", "%", 0, 100);
+        configParam(CV2_ATTNV_PARAM, -1.f, 1.f, 0.f, "OSC2 CV", "%", 0, 100);
 
         // -- Params FM
         configParam(FM1_PARAM, 0.f, 1.f, 0.f, "FM1 CV", "%", 0, 10);
@@ -76,15 +76,15 @@ struct ComplexOscillator : Module {
 
         // -- Params Modulation
         configParam(MOD_INDEX_PARAM, 0.f, 10.f, 0.f, "Modulation Index", "%", 0, 10);
-        configParam(MOD_CV_PARAM, -1.f, 1.f, 0.f, "Modulation CV", "%", 0, 100);
+        configParam(MOD_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Modulation CV", "%", 0, 100);
 
         // -- Params Harmonics
         configParam(HARMONICS_TIMBRE_PARAM, 0.f, 10.f, 0.f, "Harmonics Timbre", "%", 0, 10);
-        configParam(HARMONICS_TIMBRE_CV_PARAM, -1.f, 1.f, 0.f, "Harmonics Timbre CV", "%", 0, 100);
+        configParam(HARMONICS_TIMBRE_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Harmonics Timbre CV", "%", 0, 100);
         configParam(HARMONICS_LOW_HIGH_PARAM, 0.f, 10.f, 0.f, "Harmonics Low/High", "%", 0, 10);
-        configParam(HARMONICS_LOW_HIGH_CV_PARAM, -1.f, 1.f, 0.f, "Harmonics Low/High CV", "%", 0, 100);
+        configParam(HARMONICS_LOW_HIGH_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Harmonics Low/High CV", "%", 0, 100);
         configParam(HARMONICS_EVEN_ODD_PARAM, 0.f, 10.f, 0.f, "Harmonics Even/Odd", "%", 0, 10);
-        configParam(HARMONICS_EVEN_ODD_CV_PARAM, -1.f, 1.f, 0.f, "Harmonics Even/Odd CV", "%", 0, 100);
+        configParam(HARMONICS_EVEN_ODD_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Harmonics Even/Odd CV", "%", 0, 100);
 
 
         // INPUTS
@@ -138,24 +138,48 @@ struct ComplexOscillator : Module {
 
     void process(const ProcessArgs& args) override {
 
-        // ------ HARDWARE SEND ------ //
+        // ------ HARDWARE OUTPUTS ------ --> TO AUDIO DEVICE//
 
         //OSC1
-        float cvToOsc1_HW = getComplexCV(FREQ1_PARAM, CV1_ATTV_PARAM, CV1_INPUT);
+        float cvToOsc1_HW = getComplexCV(FREQ1_PARAM, CV1_ATTNV_PARAM, CV1_INPUT);
         float fmOsc1_HW = getSimpleCV(FM1_PARAM, FM1_INPUT);
         float vOctOSC1_HM = inputs[V_OCT1_INPUT].getVoltage();
-
+        
         outputs[CV1_OUTPUT_HW].setVoltage(cvToOsc1_HW);
         outputs[FM1_OUTPUT_HW].setVoltage(fmOsc1_HW);
         outputs[V_OCT1_OUTPUT_HW].setVoltage(vOctOSC1_HM);
 
+        // MODULATION
+        float cvToMod_HW = getComplexCV(MOD_INDEX_PARAM, MOD_CV_ATTNV_PARAM, MOD_INPUT);
+        outputs[MOD_OUTPUT_HW].setVoltage(cvToMod_HW);
 
+        //OSC2
+        float cvToOsc2_HW = getComplexCV(FREQ2_PARAM, CV2_ATTNV_PARAM, CV2_INPUT);
+        float fmOsc2_HW = getSimpleCV(FM2_PARAM, FM2_INPUT);
+        float vOctOSC2_HM = inputs[V_OCT2_INPUT].getVoltage();
 
-        //OSC1 SEND CV TO HW
-        float cvToOsc2_HW = {
-                getComplexCV(FREQ2_PARAM, CV2_ATTV_PARAM, CV2_INPUT)
-        };
         outputs[CV2_OUTPUT_HW].setVoltage(cvToOsc2_HW);
+        outputs[FM2_OUTPUT_HW].setVoltage(fmOsc2_HW);
+        outputs[V_OCT2_OUTPUT_HW].setVoltage(vOctOSC2_HM);
+        
+        // HARMONICS
+        float harmTimbre_HW = {
+                getComplexCV(HARMONICS_TIMBRE_PARAM, HARMONICS_TIMBRE_CV_ATTNV_PARAM, HARMONICS_TIMBRE_INPUT)
+        };
+        float harmLowHigh_HW = {
+                getComplexCV(HARMONICS_LOW_HIGH_PARAM, HARMONICS_LOW_HIGH_CV_ATTNV_PARAM, HARMONICS_LOW_HIGH_INPUT)
+        };
+        float harmEvenOdd_HW = {
+                getComplexCV(HARMONICS_EVEN_ODD_PARAM, HARMONICS_EVEN_ODD_CV_ATTNV_PARAM, HARMONICS_EVEN_ODD_INPUT)
+        };
+
+        outputs[HARMONICS_TIMBRE_OUTPUT_HW].setVoltage(harmTimbre_HW);
+        outputs[HARMONICS_LOW_HIGH_OUTPUT_HW].setVoltage(harmLowHigh_HW);
+        outputs[HARMONICS_EVEN_ODD_OUTPUT_HW].setVoltage(harmEvenOdd_HW);
+
+        // ------ HARDWARE INPUTS ------ FROM AUDIO DEVICE --> IN MODULE//
+        float osc1input_HW = inputs[OSC1_INPUT_HW].getVoltage();
+        float osc2input_HW = inputs[OSC1_INPUT_HW].getVoltage();
 
     }
 };
@@ -175,18 +199,17 @@ struct RuffCvRedKnob : RoundKnob { RuffCvRedKnob() {
 
 struct ComplexOscillatorWidget : ModuleWidget {
 
-    std::array<float, 10> createHwOuts(float start_point, float distance) {
-        std::array<float, 10> outCols;
-        for (int i = 0; i<10; i++) {
+    std::array<float, 12> createObjects(float start_point, float distance, int n) {
+        std::array<float, 12> outCols;
+        for (int i = 0; i<n; i++) {
             outCols[i] = start_point + distance*i;
         }
         return outCols;
     }
 
     ComplexOscillatorWidget(ComplexOscillator* module) {
-
-
-
+        
+        
         setModule(module);
         setPanel(createPanel(asset::plugin(pluginInstance, "res/ComplexOscillator.svg")));
 
@@ -195,40 +218,99 @@ struct ComplexOscillatorWidget : ModuleWidget {
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<RuffHugeRedKnob>(mm2px(Vec(100, 30)), module, ComplexOscillator::FREQ2_PARAM));
-        addParam(createParamCentered<RuffCvRedKnob>(mm2px(Vec(6.605, 80.561)), module, ComplexOscillator::CV1_ATTV_PARAM));
+
+
+        float x_distance = 15;
+        float y_distance = 17;
+        float dist_osc_mod = 20;
+        float KnobPosition_y = 98.115;
+        float PortPosition_y = KnobPosition_y + y_distance;
+        float osc1_start_point = 10;
+        std::array<float, 12> osc1_Objects = createObjects(osc1_start_point, x_distance, 3);
+        float freqPosition_x = osc1_Objects[1];
+        float freqPosition_y = 40;
 
         // ------ MODULE KNOBS ------
-        // OSC1
-        addParam(createParamCentered<RuffHugeRedKnob>(mm2px(Vec(30, 30)), module, ComplexOscillator::FREQ1_PARAM));
-        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(Vec(10, 100))), module, ComplexOscillator::FM1_PARAM));
-        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(Vec(25, 100))), module, ComplexOscillator::CV1_ATTV_PARAM));
 
-        // ------ MODULE INPUTS ------
-        // OSC1
-        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(10, 115)), module, ComplexOscillator::FM1_INPUT));
-        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(25, 115)), module, ComplexOscillator::CV1_INPUT));
-        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(40, 115)), module, ComplexOscillator::V_OCT1_INPUT));
+        // OSC1 KNOBS
+        addParam(createParamCentered<RuffHugeRedKnob>(mm2px(Vec(freqPosition_x, freqPosition_y)), module, ComplexOscillator::FREQ1_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(osc1_Objects[0], KnobPosition_y)), module, ComplexOscillator::FM1_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(osc1_Objects[1], KnobPosition_y)), module, ComplexOscillator::CV1_ATTNV_PARAM));
 
-        // ------ HARDWARE OUTPUTS ------
-        std::array<float, 10> hw_outs = createHwOuts(12, 11);
+        // MODULATION KNOBS
+        float modulation_x = osc1_Objects[2] + dist_osc_mod;
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(modulation_x, KnobPosition_y - y_distance)), module, ComplexOscillator::MOD_INDEX_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(modulation_x, KnobPosition_y )), module, ComplexOscillator::MOD_CV_ATTNV_PARAM));
+
+        // OSC2 KNOBS
+        float osc2_start_point = modulation_x + dist_osc_mod;
+        std::array<float, 12> osc2_Objects = createObjects(osc2_start_point, x_distance, 3);
+
+        float freqPositionOSC2_x = 2*modulation_x - freqPosition_x;
+        addParam(createParamCentered<RuffHugeRedKnob>(mm2px(Vec(freqPositionOSC2_x, freqPosition_y)), module, ComplexOscillator::FREQ2_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(osc2_Objects[0], KnobPosition_y)), module, ComplexOscillator::FM2_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(osc2_Objects[1], KnobPosition_y)), module, ComplexOscillator::CV2_ATTNV_PARAM));
+
+        // HARMONICS KNOBS
+        float harmParamStart_x = osc2_Objects[1] + 2*x_distance;
+        float harmCvStart_x = harmParamStart_x + x_distance;
+        std::array<float, 12> harmParamObjects_y = createObjects(PortPosition_y-y_distance, -y_distance*2, 3);
+
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmParamStart_x, harmParamObjects_y[0])), module, ComplexOscillator::HARMONICS_TIMBRE_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmParamStart_x, harmParamObjects_y[1])), module, ComplexOscillator::HARMONICS_LOW_HIGH_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmParamStart_x, harmParamObjects_y[2])), module, ComplexOscillator::HARMONICS_EVEN_ODD_PARAM));
+        
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmCvStart_x, harmParamObjects_y[0])), module, ComplexOscillator::HARMONICS_TIMBRE_CV_ATTNV_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmCvStart_x, harmParamObjects_y[1])), module, ComplexOscillator::HARMONICS_LOW_HIGH_CV_ATTNV_PARAM));
+        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmCvStart_x, harmParamObjects_y[2])), module, ComplexOscillator::HARMONICS_EVEN_ODD_CV_ATTNV_PARAM));
+
+        // HARMONICS PORTS
+        std::array<float, 12> harmPortsObjects_y = createObjects(PortPosition_y, -y_distance*2, 3);
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(harmCvStart_x, harmPortsObjects_y[0])), module, ComplexOscillator::HARMONICS_TIMBRE_INPUT));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(harmCvStart_x, harmPortsObjects_y[1])), module, ComplexOscillator::HARMONICS_LOW_HIGH_INPUT));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(harmCvStart_x, harmPortsObjects_y[2])), module, ComplexOscillator::HARMONICS_EVEN_ODD_INPUT));
+
+        // ------ MODULE PORTS ------
         // OSC1
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[0])), module, ComplexOscillator::CV1_OUTPUT_HW));
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[1])), module, ComplexOscillator::FM1_OUTPUT_HW));
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[2])), module, ComplexOscillator::V_OCT1_OUTPUT_HW));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc1_Objects[0], PortPosition_y)), module, ComplexOscillator::FM1_INPUT));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc1_Objects[1], PortPosition_y)), module, ComplexOscillator::CV1_INPUT));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc1_Objects[2], PortPosition_y)), module, ComplexOscillator::V_OCT1_INPUT));
+
+        // MODULATION
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(modulation_x, PortPosition_y)), module, ComplexOscillator::MOD_INPUT));
 
         // OSC2
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[3])), module, ComplexOscillator::CV2_OUTPUT_HW));
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[4])), module, ComplexOscillator::FM2_OUTPUT_HW));
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[5])), module, ComplexOscillator::V_OCT2_OUTPUT_HW));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc2_Objects[0], PortPosition_y)), module, ComplexOscillator::FM2_INPUT));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc2_Objects[1], PortPosition_y)), module, ComplexOscillator::CV2_INPUT));
+        addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc2_Objects[2], PortPosition_y)), module, ComplexOscillator::V_OCT2_INPUT));
+
+        // HARMONICS
+
+
+        // ------ HARDWARE INPUTS/OUTPUTS ------
+        std::array<float, 12> hw_outs = createObjects(12, 12, 12);
+        float hwPosition = 10;
+
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(hw_outs[0], hwPosition)), module, ComplexOscillator::OSC1_INPUT_HW));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(hw_outs[1], hwPosition)), module, ComplexOscillator::OSC2_INPUT_HW));
+
+        // OSC1
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[2], hwPosition)), module, ComplexOscillator::CV1_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[3], hwPosition)), module, ComplexOscillator::FM1_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[4], hwPosition)), module, ComplexOscillator::V_OCT1_OUTPUT_HW));
+
+        // OSC2
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[5], hwPosition)), module, ComplexOscillator::CV2_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[6], hwPosition)), module, ComplexOscillator::FM2_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[7], hwPosition)), module, ComplexOscillator::V_OCT2_OUTPUT_HW));
 
         // Modulation
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[6])), module, ComplexOscillator::MOD_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[8], hwPosition)), module, ComplexOscillator::MOD_OUTPUT_HW));
 
         // Harmonics
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[7])), module, ComplexOscillator::HARMONICS_TIMBRE_OUTPUT_HW));
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[8])), module, ComplexOscillator::HARMONICS_LOW_HIGH_OUTPUT_HW));
-        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(150, hw_outs[9])), module, ComplexOscillator::HARMONICS_EVEN_ODD_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[9], hwPosition)), module, ComplexOscillator::HARMONICS_TIMBRE_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[10], hwPosition)), module, ComplexOscillator::HARMONICS_LOW_HIGH_OUTPUT_HW));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(hw_outs[11], hwPosition)), module, ComplexOscillator::HARMONICS_EVEN_ODD_OUTPUT_HW));
 
     }
 };
