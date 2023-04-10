@@ -180,6 +180,9 @@ struct ComplexOscillator : Module {
         // ------ HARDWARE INPUTS ------ FROM AUDIO DEVICE --> IN MODULE//
         float osc1input_HW = inputs[OSC1_INPUT_HW].getVoltage();
         float osc2input_HW = inputs[OSC1_INPUT_HW].getVoltage();
+        outputs[OSC1_OUTPUT].setVoltage(osc1input_HW);
+        outputs[OSC2_OUTPUT].setVoltage(osc2input_HW);
+
 
     }
 };
@@ -189,7 +192,7 @@ struct RuffBigRedKnob : RoundKnob { RuffBigRedKnob() {
     } };
 
 struct RuffHugeRedKnob : RoundKnob { RuffHugeRedKnob() {
-        setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/custom/ruff-huge-red-knob.svg")));
+        setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/custom/ruff-huge-red-knob30.svg")));
     } };
 
 struct RuffCvRedKnob : RoundKnob { RuffCvRedKnob() {
@@ -213,17 +216,17 @@ struct ComplexOscillatorWidget : ModuleWidget {
         setModule(module);
         setPanel(createPanel(asset::plugin(pluginInstance, "res/ComplexOscillator.svg")));
 
-        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+//        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+//        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+//        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+//        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 
 
-        float x_distance = 15;
-        float y_distance = 17;
+        float x_distance = 14;
+        float y_distance = 16;
         float dist_osc_mod = 20;
-        float KnobPosition_y = 98.115;
+        float KnobPosition_y = 100;
         float PortPosition_y = KnobPosition_y + y_distance;
         float osc1_start_point = 10;
         std::array<float, 12> osc1_Objects = createObjects(osc1_start_point, x_distance, 3);
@@ -264,6 +267,8 @@ struct ComplexOscillatorWidget : ModuleWidget {
         addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmCvStart_x, harmParamObjects_y[1])), module, ComplexOscillator::HARMONICS_LOW_HIGH_CV_ATTNV_PARAM));
         addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmCvStart_x, harmParamObjects_y[2])), module, ComplexOscillator::HARMONICS_EVEN_ODD_CV_ATTNV_PARAM));
 
+//        addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(harmCvStart_x+10, harmParamObjects_y[2])), module, ComplexOscillator::HARMONICS_EVEN_ODD_CV_ATTNV_PARAM));
+
         // HARMONICS PORTS
         std::array<float, 12> harmPortsObjects_y = createObjects(PortPosition_y, -y_distance*2, 3);
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(harmCvStart_x, harmPortsObjects_y[0])), module, ComplexOscillator::HARMONICS_TIMBRE_INPUT));
@@ -275,6 +280,7 @@ struct ComplexOscillatorWidget : ModuleWidget {
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc1_Objects[0], PortPosition_y)), module, ComplexOscillator::FM1_INPUT));
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc1_Objects[1], PortPosition_y)), module, ComplexOscillator::CV1_INPUT));
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc1_Objects[2], PortPosition_y)), module, ComplexOscillator::V_OCT1_INPUT));
+        addOutput(createOutputCentered<CL1362Port>(mm2px(Vec(osc1_Objects[2], freqPosition_y + 20)), module, ComplexOscillator::OSC1_OUTPUT));
 
         // MODULATION
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(modulation_x, PortPosition_y)), module, ComplexOscillator::MOD_INPUT));
@@ -283,13 +289,11 @@ struct ComplexOscillatorWidget : ModuleWidget {
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc2_Objects[0], PortPosition_y)), module, ComplexOscillator::FM2_INPUT));
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc2_Objects[1], PortPosition_y)), module, ComplexOscillator::CV2_INPUT));
         addInput(createInputCentered<PJ3410Port>(mm2px(Vec(osc2_Objects[2], PortPosition_y)), module, ComplexOscillator::V_OCT2_INPUT));
-
-        // HARMONICS
-
+        addOutput(createOutputCentered<CL1362Port>(mm2px(Vec(osc2_Objects[2], freqPosition_y + 20)), module, ComplexOscillator::OSC2_OUTPUT));
 
         // ------ HARDWARE INPUTS/OUTPUTS ------
-        std::array<float, 12> hw_outs = createObjects(12, 12, 12);
-        float hwPosition = 10;
+        std::array<float, 12> hw_outs = createObjects(5, 12, 12);
+        float hwPosition = 5;
 
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(hw_outs[0], hwPosition)), module, ComplexOscillator::OSC1_INPUT_HW));
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(hw_outs[1], hwPosition)), module, ComplexOscillator::OSC2_INPUT_HW));
