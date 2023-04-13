@@ -1,10 +1,10 @@
 {
-  "slug": "VerbaPlugins",
-  "name": "VerbaPlugins",
+  "slug": "Ruff",
+  "name": "Ruff",
   "version": "2.0.0",
   "license": "proprietary",
-  "brand": "RuFF",
-  "author": "RuFF",
+  "brand": "Ruff",
+  "author": "igor@zderev.ru",
   "authorEmail": "",
   "authorUrl": "",
   "pluginUrl": "",
@@ -17,7 +17,13 @@
       "slug": "DemoModule",
       "name": "DemoModule",
       "description": "",
-      "tags": []
+      "tags": ["Demo"]
+    },
+    {
+      "slug": "ComplexOscillator",
+      "name": "ComplexOscillator",
+      "description": "",
+      "tags": ["Utility"]
     }
   ]
 }
