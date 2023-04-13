@@ -79,11 +79,11 @@ struct ComplexOscillator : Module {
         configParam(MOD_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Modulation CV", "%", 0, 100);
 
         // -- Params Harmonics
-        configParam(HARMONICS_TIMBRE_PARAM, 0.f, 10.f, 0.f, "Harmonics Timbre", "%", 0, 10);
+        configParam(HARMONICS_TIMBRE_PARAM, -5.f, 5.f, 0.f, "Harmonics Timbre", "%", 0, 10);
         configParam(HARMONICS_TIMBRE_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Harmonics Timbre CV", "%", 0, 100);
-        configParam(HARMONICS_LOW_HIGH_PARAM, 0.f, 10.f, 0.f, "Harmonics Low/High", "%", 0, 10);
+        configParam(HARMONICS_LOW_HIGH_PARAM, -5.f, 5.f, 0.f, "Harmonics Low/High", "%", 0, 10);
         configParam(HARMONICS_LOW_HIGH_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Harmonics Low/High CV", "%", 0, 100);
-        configParam(HARMONICS_EVEN_ODD_PARAM, 0.f, 10.f, 0.f, "Harmonics Even/Odd", "%", 0, 10);
+        configParam(HARMONICS_EVEN_ODD_PARAM, -5.f, 5.f, 0.f, "Harmonics Even/Odd", "%", 0, 10);
         configParam(HARMONICS_EVEN_ODD_CV_ATTNV_PARAM, -1.f, 1.f, 0.f, "Harmonics Even/Odd CV", "%", 0, 100);
 
 
@@ -179,7 +179,7 @@ struct ComplexOscillator : Module {
 
         // ------ HARDWARE INPUTS ------ FROM AUDIO DEVICE --> IN MODULE//
         float osc1input_HW = inputs[OSC1_INPUT_HW].getVoltage();
-        float osc2input_HW = inputs[OSC1_INPUT_HW].getVoltage();
+        float osc2input_HW = inputs[OSC2_INPUT_HW].getVoltage();
         outputs[OSC1_OUTPUT].setVoltage(osc1input_HW);
         outputs[OSC2_OUTPUT].setVoltage(osc2input_HW);
 
