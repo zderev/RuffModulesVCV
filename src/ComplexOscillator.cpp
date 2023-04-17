@@ -1,5 +1,6 @@
 #include "plugin.hpp"
 #include<array>
+#include "display.hpp"
 
 struct ComplexOscillator : Module {
     enum ParamId {
@@ -135,7 +136,7 @@ struct ComplexOscillator : Module {
         float cvVoltage = inputs[cv_input].getVoltage();
         return paramValue + attenuatorValue * cvVoltage;
     }
-
+    float freqHertz;
     void process(const ProcessArgs& args) override {
 
         // ------ HARDWARE OUTPUTS ------ --> TO AUDIO DEVICE//
@@ -182,7 +183,7 @@ struct ComplexOscillator : Module {
         float osc2input_HW = inputs[OSC2_INPUT_HW].getVoltage();
         outputs[OSC1_OUTPUT].setVoltage(osc1input_HW);
         outputs[OSC2_OUTPUT].setVoltage(osc2input_HW);
-
+        freqHertz = dsp::FREQ_C4 * dsp::exp2_taylor5(osc2input_HW);
 
     }
 };
@@ -227,7 +228,15 @@ struct ComplexOscillatorWidget : ModuleWidget {
     }
 
     ComplexOscillatorWidget(ComplexOscillator* module) {
-        
+        {
+            BPMDisplay *bpm = new BPMDisplay();
+            if (module) {
+                bpm->value = &module->freqHertz;
+            }
+            bpm->box.pos = Vec(71, 102);
+            bpm->box.size = Vec(70, 45);
+            addChild(bpm);
+        }
         
         setModule(module);
         setPanel(createPanel(asset::plugin(pluginInstance, "res/ComplexOscillator.svg")));
