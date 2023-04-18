@@ -1,6 +1,81 @@
 #include "plugin.hpp"
 #include<array>
 #include "display.hpp"
+#include "dsp/fft.hpp"
+
+static const int BUFFER_SIZE = 1024;
+
+struct GetFrequency {
+//    static constexpr int BUFFER_LEN = 1024;
+//
+//    alignas(16) float inputBuffer[BUFFER_LEN] = {};
+//    alignas(16) float outputBuffer[BUFFER_LEN] = {};
+//    alignas(16) float freqBuffer[BUFFER_LEN * 2];
+
+//    int frame = 0;
+
+//    dsp::RealFFT fft;
+
+float buffer[BUFFER_SIZE] = {};
+    int bufferIndex = 0;
+    float frameIndex = 0;
+
+    float inputValue = 0;
+
+    rack::dsp::RealFFT rfft;
+    alignas(16) float in[BUFFER_SIZE] = {};
+    alignas(16) float out[BUFFER_SIZE * 2] = {};
+    alignas(16) float power_spectrum[BUFFER_SIZE * 2];
+
+    GetFrequency() : rfft(BUFFER_SIZE) {}
+
+    float process(float deltaTime1, float x) {
+        inputValue = x;
+        float deltaTime = std::pow(2.0f, -14.0f);
+        int frameCount = (int)std::ceil(deltaTime * APP->engine->getSampleRate());
+
+        // Add frame to buffer
+        if(bufferIndex < BUFFER_SIZE) {
+            if(++frameIndex > frameCount) {
+                frameIndex = 0;
+                buffer[bufferIndex] = inputValue;
+                bufferIndex;
+            }
+        }
+
+        for(int i = 0; i < BUFFER_SIZE; i++) {
+            in[i] = buffer[i] / 10.0f;
+        }
+        rfft.rfft(in, out);
+        power_spectrum[0] = out[0]*out[0];
+
+        for(int k = 2; k < BUFFER_SIZE; k+=2) { // TODO: Check the rounding of (BUFFER_SIZE + 1)/ 2 -> it should be equivalent to BUFFER_SIZE / 2 rounded up (C rounds integers down)
+            power_spectrum[k] = std::sqrt(out[k] * out[k] + out[k+1] * out[k+1]);
+        }
+        if(BUFFER_SIZE % 2 == 0) {
+            power_spectrum[1] = out[1] * out[1];
+        }
+        return *std::max_element(std::begin(power_spectrum), std::end(power_spectrum));
+    }
+
+//    float process(float deltaTime, float x) {
+//        inputBuffer[frame] = x;
+//        if (++frame >= BUFFER_LEN) {
+//            frame = 0;
+//
+//            fft.rfft(inputBuffer, freqBuffer);
+//
+//            for (int i = 0; i < BUFFER_LEN; i++) {
+//                float f = 1 / deltaTime / 2 / BUFFER_LEN * i;
+//                freqBuffer[2 * i + 0] *= f / BUFFER_LEN;
+//                freqBuffer[2 * i + 1] *= f / BUFFER_LEN;
+//            }
+//        }
+//
+////        return freqBuffer[frame];
+//        return *std::max_element(std::begin(freqBuffer), std::end(freqBuffer));
+//    }
+};
 
 struct ComplexOscillator : Module {
     enum ParamId {
@@ -59,6 +134,7 @@ struct ComplexOscillator : Module {
         BLINK_LIGHT,
         LIGHTS_LEN
     };
+    GetFrequency getF;
 
     ComplexOscillator() {
         config(PARAMS_LEN, INPUTS_LEN, OUTPUTS_LEN, LIGHTS_LEN);
@@ -181,9 +257,16 @@ struct ComplexOscillator : Module {
         // ------ HARDWARE INPUTS ------ FROM AUDIO DEVICE --> IN MODULE//
         float osc1input_HW = inputs[OSC1_INPUT_HW].getVoltage();
         float osc2input_HW = inputs[OSC2_INPUT_HW].getVoltage();
+//        float osc2input_HW = inputs[OSC2_INPUT_HW].getValue();
+
         outputs[OSC1_OUTPUT].setVoltage(osc1input_HW);
-        outputs[OSC2_OUTPUT].setVoltage(osc2input_HW);
-        freqHertz = dsp::FREQ_C4 * dsp::exp2_taylor5(osc2input_HW);
+//        outputs[OSC2_OUTPUT].setVoltage(osc2input_HW);
+
+        freqHertz = getF.process(args.sampleTime, osc2input_HW);
+//        freqHertz = osc2input_HW;
+
+        outputs[OSC2_OUTPUT].setVoltage(freqHertz);
+
 
     }
 };
