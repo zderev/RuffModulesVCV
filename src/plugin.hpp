@@ -8,6 +8,6 @@ using namespace rack;
 extern Plugin* pluginInstance;
 extern Model* modelDemoModule;
 extern Model* modelComplexOscillator;
-
+extern Model* modelVCA;
 // Declare each Model, defined in each module source file
 // extern Model* modelMyModule;
