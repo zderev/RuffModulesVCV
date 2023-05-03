@@ -67,8 +67,8 @@ struct VCAWidget : ModuleWidget {
 		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(15.433, 28.409)), module, VCA::CUTOFF_PARAM));
 		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(44.3, 48.654)), module, VCA::LIN_CV_PARAM));
 		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(15.433, 68.879)), module, VCA::INPUT_GAIN_PARAM));
-		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(44.3, 78.933)), module, VCA::EXP_CV_PARAM));
-		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(44.3, 109.349)), module, VCA::FREQ_CV_PARAM));
+		addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(44.3, 78.933)), module, VCA::EXP_CV_PARAM));
+		addParam(createParamCentered<RuffBigRedKnob16>(mm2px(Vec(44.3, 109.349)), module, VCA::FREQ_CV_PARAM));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(62.361, 48.518)), module, VCA::IN_LIN_CV_INPUT));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(62.361, 79.106)), module, VCA::IN_EXP_CV_INPUT));
