@@ -183,38 +183,8 @@ struct ComplexOscillator : Module {
         outputs[OSC1_OUTPUT].setVoltage(osc1input_HW);
         outputs[OSC2_OUTPUT].setVoltage(osc2input_HW);
 
-
     }
 };
-
-struct RuffBigRedKnob : RoundKnob { RuffBigRedKnob() {
-        sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/custom/ruff-big-red-knob.svg")));
-        tw->box.size = sw->box.size;
-        fb->box.size = sw->box.size;
-        box.size = sw->box.size;
-        shadow->box.size = sw->box.size;
-        shadow->box.pos = math::Vec(3, sw->box.size.y * 0.025);
-        shadow->opacity = 0.3;
-        shadow->blurRadius = 0.1;
-    } };
-
-struct RuffHugeRedKnob : RoundKnob { RuffHugeRedKnob() {
-        sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/custom/ruff-huge-red-knob30.svg")));
-        tw->box.size = sw->box.size;
-        fb->box.size = sw->box.size;
-        box.size = sw->box.size;
-        shadow->box.size = sw->box.size;
-        shadow->box.pos = math::Vec(3, sw->box.size.y * 0.025);
-        shadow->opacity = 0.3;
-        shadow->blurRadius = 0.1;
-    } };
-
-struct RuffCvRedKnob : RoundKnob { RuffCvRedKnob() {
-        shadow->opacity = 0.1;
-        shadow->blurRadius = 2;
-        setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/custom/ruff-cv-red-knob.svg")));
-    } };
-
 
 struct ComplexOscillatorWidget : ModuleWidget {
 
@@ -231,12 +201,6 @@ struct ComplexOscillatorWidget : ModuleWidget {
         
         setModule(module);
         setPanel(createPanel(asset::plugin(pluginInstance, "res/ComplexOscillator.svg")));
-
-//        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-//        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-//        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-//        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-
 
 
         float x_distance = 14;

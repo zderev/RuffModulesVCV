@@ -17,13 +17,23 @@
       "slug": "DemoModule",
       "name": "DemoModule",
       "description": "",
-      "tags": ["Demo"]
+      "tags": [
+        "Demo"
+      ]
     },
     {
       "slug": "ComplexOscillator",
       "name": "ComplexOscillator",
       "description": "",
-      "tags": ["Utility"]
+      "tags": [
+        "Utility"
+      ]
+    },
+    {
+      "slug": "VCA",
+      "name": "VCA",
+      "description": "",
+      "tags": []
     }
   ]
 }
