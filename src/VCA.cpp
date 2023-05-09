@@ -31,12 +31,15 @@ struct VCA : Module {
 	};
 
 	VCA() {
+//      Module Params
 		config(PARAMS_LEN, INPUTS_LEN, OUTPUTS_LEN, LIGHTS_LEN);
-		configParam(CUTOFF_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(LIN_CV_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(INPUT_GAIN_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(EXP_CV_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(FREQ_CV_PARAM, 0.f, 1.f, 0.f, "");
+		configParam(CUTOFF_PARAM, 0.f, 10.f, 5.f, "Cutoff", "%", 0, 10);
+		configParam(LIN_CV_PARAM, -1.f, 1.f, 0.f, "Lin CV", "%", 0, 100);
+		configParam(INPUT_GAIN_PARAM, 0.f, 10.f, 5.f, "Input Gain", "%", 0, 10);
+		configParam(EXP_CV_PARAM, -1.f, 1.f, 0.f, "Exp CV", "%", 0, 100););
+		configParam(FREQ_CV_PARAM, -5.f, 5.f, 0.f, "Freq CV", "%", 0, 10);
+
+//      HW inputs
 		configInput(IN_LIN_CV_INPUT, "");
 		configInput(IN_EXP_CV_INPUT, "");
 		configInput(INPUT_INPUT, "");
@@ -46,6 +49,7 @@ struct VCA : Module {
 		configOutput(HW_FREQ_CV_OUTPUT, "");
 		configOutput(HW_EXP_CV_OUTPUT, "");
 		configOutput(HW_LIN_CV_OUTPUT, "");
+
 		configOutput(OUT_OUTPUT, "");
 	}
 
@@ -59,28 +63,28 @@ struct VCAWidget : ModuleWidget {
 		setModule(module);
 		setPanel(createPanel(asset::plugin(pluginInstance, "res/VCA.svg")));
 
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+//		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+//		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+//		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+//		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(15.433, 28.409)), module, VCA::CUTOFF_PARAM));
-		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(44.3, 48.654)), module, VCA::LIN_CV_PARAM));
-		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(15.433, 68.879)), module, VCA::INPUT_GAIN_PARAM));
-		addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(44.3, 78.933)), module, VCA::EXP_CV_PARAM));
-		addParam(createParamCentered<RuffBigRedKnob16>(mm2px(Vec(44.3, 109.349)), module, VCA::FREQ_CV_PARAM));
+		addParam(createParamCentered<RuffBigRedKnob16>(mm2px(Vec(15.583, 44.92)), module, VCA::CUTOFF_PARAM));
+		addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(40.596, 48.654)), module, VCA::LIN_CV_PARAM));
+		addParam(createParamCentered<RuffBigRedKnob16>(mm2px(Vec(15.433, 75.651)), module, VCA::INPUT_GAIN_PARAM));
+		addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(40.596, 78.933)), module, VCA::EXP_CV_PARAM));
+		addParam(createParamCentered<RuffBigRedKnob>(mm2px(Vec(40.596, 109.349)), module, VCA::FREQ_CV_PARAM));
 
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(62.361, 48.518)), module, VCA::IN_LIN_CV_INPUT));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(62.361, 79.106)), module, VCA::IN_EXP_CV_INPUT));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(15.433, 109.349)), module, VCA::INPUT_INPUT));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(62.361, 109.348)), module, VCA::IN_FREQ_CV_INPUT));
+		addInput(createInputCentered<PJ3410Port>(mm2px(Vec(56.54, 48.518)), module, VCA::IN_LIN_CV_INPUT));
+		addInput(createInputCentered<PJ3410Port>(mm2px(Vec(56.54, 79.106)), module, VCA::IN_EXP_CV_INPUT));
+		addInput(createInputCentered<PJ3410Port>(mm2px(Vec(15.433, 109.349)), module, VCA::INPUT_INPUT));
+		addInput(createInputCentered<PJ3410Port>(mm2px(Vec(56.54, 109.348)), module, VCA::IN_FREQ_CV_INPUT));
 
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(7.416, 8.3)), module, VCA::HW_INPUT_OUTPUT));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(21.876, 8.3)), module, VCA::HW_OOUTPUT_OUTPUT));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(36.335, 8.3)), module, VCA::HW_FREQ_CV_OUTPUT));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(50.794, 8.3)), module, VCA::HW_EXP_CV_OUTPUT));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(65.254, 8.3)), module, VCA::HW_LIN_CV_OUTPUT));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(62.361, 28.409)), module, VCA::OUT_OUTPUT));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(9.004, 8.3)), module, VCA::HW_INPUT_OUTPUT));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(20.817, 8.3)), module, VCA::HW_OOUTPUT_OUTPUT));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(32.631, 8.3)), module, VCA::HW_FREQ_CV_OUTPUT));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(44.444, 8.3)), module, VCA::HW_EXP_CV_OUTPUT));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(56.259, 8.3)), module, VCA::HW_LIN_CV_OUTPUT));
+		addOutput(createOutputCentered<CL1362Port>(mm2px(Vec(56.54, 28.409)), module, VCA::OUT_OUTPUT));
 	}
 };
 
