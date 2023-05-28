@@ -14,14 +14,6 @@
   "changelogUrl": "",
   "modules": [
     {
-      "slug": "DemoModule",
-      "name": "DemoModule",
-      "description": "",
-      "tags": [
-        "Demo"
-      ]
-    },
-    {
       "slug": "ComplexOscillator",
       "name": "ComplexOscillator",
       "description": "",
@@ -32,6 +24,14 @@
     {
       "slug": "VCA",
       "name": "VCA",
+      "description": "",
+      "tags": [
+        "VCA"
+      ]
+    },
+    {
+      "slug": "Notes",
+      "name": "Notes",
       "description": "",
       "tags": []
     }

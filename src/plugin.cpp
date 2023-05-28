@@ -6,9 +6,9 @@ Plugin* pluginInstance;
 
 void init(Plugin* p) {
 	pluginInstance = p;
-	p->addModel(modelDemoModule);
     p->addModel(modelComplexOscillator);
     p->addModel(modelVCA);
+    p->addModel(modelNotes);
 
 	// Add modules here
 	// p->addModel(modelMyModule);
