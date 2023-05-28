@@ -6,9 +6,9 @@ using namespace rack;
 
 
 extern Plugin* pluginInstance;
-extern Model* modelDemoModule;
 extern Model* modelComplexOscillator;
 extern Model* modelVCA;
+extern Model* modelNotes;
 
 struct RuffBigRedKnob : RoundKnob { RuffBigRedKnob() {
         sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/ruff-big-red-knob.svg")));
