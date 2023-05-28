@@ -128,7 +128,7 @@ struct ComplexOscillator : Module {
         float cvVoltage = inputs[cv_input].getVoltage();
         return paramValue*cvVoltage;
     }
-    
+
     float getComplexCV(ParamId param_input, ParamId attenuator_input, InputId cv_input) {
         float paramValue = params[param_input].getValue();
         float attenuatorValue = params[attenuator_input].getValue();

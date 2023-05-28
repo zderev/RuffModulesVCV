@@ -42,9 +42,9 @@
      inkscape:deskcolor="#505050"
      showgrid="false"
      inkscape:document-units="mm"
-     inkscape:zoom="44.578358"
-     inkscape:cx="24.283084"
-     inkscape:cy="1.3235122"
+     inkscape:zoom="16.031996"
+     inkscape:cx="1.4658187"
+     inkscape:cy="22.39272"
      inkscape:window-width="3440"
      inkscape:window-height="1301"
      inkscape:window-x="0"
@@ -66,23 +66,16 @@
   </g>
   <path
      d="m 30.236218,21.761268 c 4.697611,0 8.516352,3.81874 8.516352,8.516349 0,4.697608 -3.818741,8.516349 -8.516352,8.516349 -4.697605,0 -8.516345,-3.818741 -8.516345,-8.516349 0,-4.697609 3.81874,-8.516349 8.516345,-8.516349 m 0,-4.641904 c -7.266126,0 -13.158251,5.892124 -13.158251,13.158253 0,7.266128 5.892125,13.158254 13.158251,13.158254 7.266129,0 13.158254,-5.892126 13.158254,-13.158254 0,-7.266129 -5.892125,-13.158253 -13.158254,-13.158253 z"
-     style="display:inline;fill:#ffffff;stroke:#ffffff;stroke-width:25.8973;stroke-dasharray:none;stroke-opacity:1"
+     style="display:inline;fill:#ffffff;stroke:#ffffff;stroke-width:25.14141664;stroke-dasharray:none;stroke-opacity:1"
      id="path34671" />
   <path
      style="display:inline;fill:#000000;fill-opacity:0.99661;stroke:none;stroke-width:33.892;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
      id="rect15303"
      width="4.9768033"
-     height="30.631098"
+     height="31.878603"
      x="27.747818"
      y="8.1185059e-16"
      inkscape:path-effect="#path-effect15357"
-     d="m 30.393651,0 a 2.4933767,2.4933767 48.62006 0 1 2.33097,2.6458333 V 27.985264 a 2.6458333,2.6458333 135 0 1 -2.645833,2.645834 2.4933767,2.4933767 48.62006 0 1 -2.33097,-2.645834 V 2.6458333 A 2.6458333,2.6458333 135 0 1 30.393651,0 Z"
+     d="m 30.393651,0 a 2.4933767,2.4933767 48.62006 0 1 2.33097,2.6458333 V 29.23277 a 2.6458333,2.6458333 135 0 1 -2.645833,2.645833 2.4933767,2.4933767 48.62006 0 1 -2.33097,-2.645833 V 2.6458333 A 2.6458333,2.6458333 135 0 1 30.393651,0 Z"
      sodipodi:type="rect" />
-  <ellipse
-     style="display:inline;fill:none;fill-opacity:0.99661;stroke:#000000;stroke-width:1.09467;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-     id="path3940"
-     cx="30.236219"
-     cy="30.277617"
-     rx="26.306095"
-     ry="26.722086" />
 </svg>
