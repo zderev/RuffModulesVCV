@@ -9,6 +9,7 @@ void init(Plugin* p) {
     p->addModel(modelComplexOscillator);
     p->addModel(modelVCA);
     p->addModel(modelNotes);
+    p->addModel(modelPIN8);
 
 	// Add modules here
 	// p->addModel(modelMyModule);

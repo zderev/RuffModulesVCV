@@ -32,8 +32,18 @@
     {
       "slug": "Notes",
       "name": "Notes",
-      "description": "",
-      "tags": []
+      "description": "Notes in 4hp",
+      "tags": [
+        "Utility"
+      ]
+    },
+    {
+      "slug": "PIN8",
+      "name": "PIN8",
+      "description": "8 in -> 1 Poly Out",
+      "tags": [
+        "Utility"
+      ]
     }
   ]
 }
