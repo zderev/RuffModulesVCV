@@ -52,7 +52,22 @@
       "tags": [
         "Utility"
       ]
+    },
+    {
+      "slug": "Blank2R",
+      "name": "Blank2R",
+      "description": "Blank 2HP Right Arrows",
+      "tags": [
+        "Blank"
+      ]
+    },
+    {
+      "slug": "Blank2L",
+      "name": "Blank2L",
+      "description": "Blank 2HP Left Arrows",
+      "tags": [
+        "Blank"
+      ]
     }
-
   ]
 }
