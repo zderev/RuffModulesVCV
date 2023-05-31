@@ -10,6 +10,7 @@ extern Model* modelComplexOscillator;
 extern Model* modelVCA;
 extern Model* modelNotes;
 extern Model* modelPIN8;
+extern Model* modelOUT8;
 
 struct RuffBigRedKnob : RoundKnob { RuffBigRedKnob() {
         sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/ruff-big-red-knob.svg")));

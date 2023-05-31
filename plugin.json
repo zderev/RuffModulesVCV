@@ -44,6 +44,15 @@
       "tags": [
         "Utility"
       ]
+    },
+    {
+      "slug": "OUT8",
+      "name": "OUT8",
+      "description": "1 Poly in -> 8 Outs",
+      "tags": [
+        "Utility"
+      ]
     }
+
   ]
 }
