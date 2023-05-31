@@ -11,6 +11,8 @@ extern Model* modelVCA;
 extern Model* modelNotes;
 extern Model* modelPIN8;
 extern Model* modelOUT8;
+extern Model* modelBlank2R;
+extern Model* modelBlank2L;
 
 struct RuffBigRedKnob : RoundKnob { RuffBigRedKnob() {
         sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/ruff-big-red-knob.svg")));

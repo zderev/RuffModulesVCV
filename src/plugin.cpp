@@ -11,4 +11,6 @@ void init(Plugin* p) {
     p->addModel(modelNotes);
     p->addModel(modelPIN8);
     p->addModel(modelOUT8);
+    p->addModel(modelBlank2R);
+    p->addModel(modelBlank2L);
 }
